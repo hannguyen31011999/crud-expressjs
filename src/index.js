@@ -1,36 +1,35 @@
 const express = require("express");
 const morgan = require("morgan");
+const route = require("./routes");
 const path = require("path");
 const { engine } = require("express-handlebars");
 const app = express();
 const port = 8000;
 
+// set default file static
 app.use(express.static(path.join(__dirname, "public")));
+// set middleware
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+// set body parse json
 app.use(express.json());
+// set morgan show log
 app.use(morgan("combined"));
-
+// set template engine
 app.engine(
   ".hbs",
   engine({
     extname: ".hbs",
   })
 );
+// set extend file template engine
 app.set("view engine", ".hbs");
+// set directory folder view
 app.set("views", path.join(__dirname, "resources/views"));
 
-app.get("/", (req, res) => {
-  console.log("params query", req.query);
-  res.render("home");
-});
-
-app.post("/", (req, res) => {
-  console.log("body", req.body);
-  res.render("home");
-});
+route(app);
 
 app.listen(port, () => {});
